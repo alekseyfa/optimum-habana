@@ -40,12 +40,6 @@ except ImportError:
 # Will error if the minimal version of Optimum Habana is not installed. Remove at your own risks.
 check_optimum_habana_min_version("1.10.0")
 
-import debugpy
-
-debugpy.listen(("0.0.0.0", 5678))
-print("Waiting for client to attach...")
-debugpy.wait_for_client()
-
 
 logger = logging.getLogger(__name__)
 
