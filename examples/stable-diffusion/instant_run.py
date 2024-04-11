@@ -175,6 +175,12 @@ def parse_args():
         type=int,
         help="Number of steps to capture for profiling.",
     )
+    parser.add_argument(
+        "--local_rank", 
+        type=int, 
+        default=0, 
+        metavar="N", 
+        help="Local process rank.")
     
     return parser.parse_args()
 
@@ -185,10 +191,11 @@ if __name__ == "__main__":
 
     args = parse_args()
 
-    app = FaceAnalysis(name='antelopev2', root='./', providers=['CPUExecutionProvider'])
+    app = FaceAnalysis(name='antelopev2', root='/root/optimum-habana/examples/stable-diffusion', providers=['CPUExecutionProvider'])
     app.prepare(ctx_id=0, det_size=(640, 640))
 
-    face_adapter = f'./checkpoints/ip-adapter.bin'
+    # prepare models under ./checkpoints
+    face_adapter = f'/root/optimum-habana/examples/stable-diffusion/checkpoints/ip-adapter.bin'
 
     # Initialize the scheduler and the generation pipeline
     kwargs = {"timestep_spacing": args.timestep_spacing}
@@ -214,7 +221,7 @@ if __name__ == "__main__":
     pipe.load_ip_adapter_instantid(face_adapter)
 
     # load an image
-    face_image = load_image("./examples/yann-lecun_resize.jpg")
+    face_image = load_image("/root/optimum-habana/examples/stable-diffusion/examples/yann-lecun_resize.jpg")
 
     # prepare face emb
     face_info = app.get(cv2.cvtColor(np.array(face_image), cv2.COLOR_RGB2BGR))
